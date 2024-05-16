@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset='utf-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	<title>Flask Kakao OAuth App</title>
+	<meta name='viewport' content='width=device-width, initial-scale=1'>
+	<link rel='stylesheet' type='text/css' media='screen' href='/static/index.css'>
+</head>
+<body>
+	<div class="Wrapper">
+		<div class="title">FooPa</div>
+		<div class="info">FooPa Delivery Application</div>
+		<div id="kakao" class="kakao_button">
+			<img src="/static/image/kakaolink_btn_small.png" alt="kakao oauth"/>
+			<span>카카오 로그인</span>
+		</div>
+<a class="deliver" href="{{ url_for('delivery') }}">deliver</a>
+		<img id="thumnail" src="" class="thumnail display_none" />
+		<div id="nickname" class="nickname display_none"></div>
+
+		<div id="logout" class="logout display_none">
+			<span>로그아웃</span>
+		</div>
+
+	</div>
+	<div id="loading" class="loading display_none">
+		<div class="loading_circle"></div>
+	</div>
+</body>
+<script src="{{url_for('static', filename='index.js') }}" ></script>
+</html>

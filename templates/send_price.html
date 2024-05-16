@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ingredients,price,time</title>
+    <link rel="stylesheet" href="/static/send_price.css">
+</head>
+<body>
+    <div class="container">
+        <ul class="ingredients">
+            {% for ingredient in ingredients %}
+                <li>{{ ingredient }}</li>
+            {% endfor %}
+        </ul>
+        <form name="form" method="post" action="/#">
+            <label for="price">가격:</label>
+            <input id="price" type="text" placeholder="가격을 입력하세요" onkeyup="addCommas(this)">원 <br>
+            <label for="time">예상 배달 완료 시간:</label>
+            <input id="time" type="text" placeholder="시간을 입력하세요">분 <br>
+            <button type="submit">입력 완료</button>
+        </form>
+    </div>
+    <script>
+        function addCommas(input) {
+            var value = input.value.replace(/,/g, '');
+            input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+    </script>
+</body>
+</html>
