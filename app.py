@@ -1,4 +1,4 @@
-from tinydb import TinyDB
+from tinydb import table,TinyDB
 from flask import Flask, render_template, request, jsonify, make_response
 from flask_jwt_extended import (
     JWTManager, create_access_token,
@@ -99,8 +99,6 @@ def userinfo():
     userinfo = UserModel().get_user(user_id).serialize()
     return jsonify(userinfo)
 
-
-
 @app.route("/oauth/refresh", methods=['POST'])
 def oauth_refesh_api():
     """
@@ -125,54 +123,51 @@ def oauth_userinfo_api():
     result = Oauth().userinfo("Bearer " + access_token)
     return jsonify(result)
 
-selected_ingredients = []  # 선택된 재료를 저장할 전역 변수
-
-@app.route('/receive-ingredients', methods=['GET','POST'])
-def receive_ingredients():
-    global selected_ingredients
-    data = request.json  # JSON 형식으로 전송된 데이터 받기
-    selected_ingredients = data.get('ingredients', [])  # 재료 목록 가져오기
-    return jsonify({'message': 'Selected ingredients received successfully.'})
-
-
-@app.route('/receive-address', methods=['GET','POST'])
-def receive_address():
-    global city
-    global county
-    global detail_address
-    data = request.json  # JSON 형식으로 전송된 데이터 받기
-    city = data.get('city', [])
-    county = data.get('county', [])
-    detail_address = data.get('detail_address', [])
-    return jsonify({'message': 'address received successfully.'})
-
-
-@app.route('/index/delivery')
-def delivery():
-    global city
-    global county
-    global detail_address
-    # 배달 정보를 delivery.html에 전달하여 렌더링
-    return render_template('delivery.html', city=city, county=county, detail_address=detail_address)
-
-@app.route('/send_address_deliver', methods=['GET','POST'])
+@app.route('/send-address-deliver', methods=['GET','POST'])
 def send_address_deliver():
     # POST 요청으로부터 도시와 군/구 정보를 받아옴
     selected_city = request.form['city']
     selected_county = request.form['county']
     # 받아온 정보를 데이터베이스에 저장
     data = {'city': selected_city, 'county': selected_county}
-    db = TinyDB('db.json')
-    db.insert(data)
+    db = TinyDB('C:/Users/user5/Desktop/db.json')
+    db.upsert(table.Document(data, doc_id=5))
     # index.html을 렌더링하여 반환
     return render_template('index.html')
 
+# 주소, 재료, 시간, 가격 뿌리기
+@app.route('/delivery')
+def delivery():
+    db = TinyDB('C:/Users/user5/Desktop/db.json')
+    ingredients_db = db.get(doc_id=3)
+    user_address_db = db.get(doc_id=2)
+    city = user_address_db.get('city')
+    county = user_address_db.get('county')
+    detail_address = user_address_db.get('detail_address')
+    ingredients = ingredients_db.get('ingredients', [])
+    return render_template('delivery.html', ingredients=ingredients, city=city, county=county, detail_address=detail_address)
 
-@app.route('/index/delivery/send_price')
-def price():
-    global selected_ingredients
-    # 선택된 재료와  send_price.html에 전달하여 렌더링
-    return render_template('send_price.html', ingredients=selected_ingredients)
+# 쇼퍼 가격, 시간 DB 저장
+@app.route('/send-price-time', methods=['GET','POST'])
+def send_price_time():
+    price = request.form['price']
+    time = request.form['time']
+    data = {'price': price, 'time': time}
+    db = TinyDB('C:/Users/user5/Desktop/db.json')
+    db.upsert(table.Document(data, doc_id=6))
+    return render_template('index.html')
+
+@app.route('/accept_order')
+def accept_order():
+    # 배달 정보를 delivery.html에 전달하여 렌더링
+    db = TinyDB('C:/Users/user5/Desktop/db.json')
+    ingredients_db = db.get(doc_id=3)
+    price_time_db = db.get(doc_id=6)
+    price = price_time_db.get('price')
+    time = price_time_db.get('time')
+    ingredients = ingredients_db.get('ingredients',[])
+    return render_template('accept_order.html', ingredients=ingredients, price=price, time=time)
+
 
 
 if __name__ == '__main__':

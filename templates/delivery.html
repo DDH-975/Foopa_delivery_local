@@ -7,20 +7,36 @@
     <title>선택된 재료</title>
     <link rel="stylesheet" href="/static/delivery.css">
     <script>
-        function showDeliveryLocation() {
-            var deliveryLocation = document.getElementById("delivery-location");
-            deliveryLocation.style.display = "block";
+        function reload() {
+            location.reload(true);
+        }
+
+        function addCommas(input) {
+            var value = input.value.replace(/,/g, '');
+            input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
     </script>
 </head>
+
 <body>
     <div class="container">
-        <button onclick="showDeliveryLocation()">조회하기</button>
-        <div class="delivery-location" id="delivery-location" style="display: none;">
-            <a href="{{ url_for('price') }}">
-                <div>배달 위치 : {{ city }} {{ county }} {{ detail_address }}</div>
-            </a>
+        <button onclick="reload()">새로고침</button>
+        <div class="delivery-location" id="delivery-location">
+            <div>배달 위치 : {{ city }} {{ county }} {{ detail_address }}</div>
+            <ul class="ingredients">
+                {% for ingredient in ingredients %}
+                <li>{{ ingredient }}</li>
+                {% endfor %}
+            </ul>
+            <form name="form" method="post" action="/send-price-time">
+                <label for="price">가격:</label>
+                <input id="price" name="price" type="text" placeholder="가격을 입력하세요" onkeyup="addCommas(this)">원 <br>
+                <label for="time">예상 배달 완료 시간:</label>
+                <input id="time" name="time" type="text" placeholder="시간을 입력하세요">분 <br>
+                <button type="submit">입력 완료</button>
+            </form>
         </div>
     </div>
 </body>
+
 </html>
