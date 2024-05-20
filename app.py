@@ -161,12 +161,16 @@ def send_price_time():
 def accept_order():
     # 배달 정보를 delivery.html에 전달하여 렌더링
     db = TinyDB('C:/Users/user5/Desktop/db.json')
+    user_address_db = db.get(doc_id=2)
     ingredients_db = db.get(doc_id=3)
     price_time_db = db.get(doc_id=6)
     price = price_time_db.get('price')
     time = price_time_db.get('time')
+    city = user_address_db.get('city')
+    county = user_address_db.get('county')
+    detail_address = user_address_db.get('detail_address')
     ingredients = ingredients_db.get('ingredients',[])
-    return render_template('accept_order.html', ingredients=ingredients, price=price, time=time)
+    return render_template('accept_order.html', ingredients=ingredients, price=price, time=time,city=city, county=county, detail_address=detail_address)
 
 
 
