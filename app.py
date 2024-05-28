@@ -173,6 +173,5 @@ def accept_order():
     return render_template('accept_order.html', ingredients=ingredients, price=price, time=time,city=city, county=county, detail_address=detail_address)
 
 
-
 if __name__ == '__main__':
     app.run(debug=True)
