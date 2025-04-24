@@ -38,7 +38,7 @@
 
 ---
 
-<br><br><br>
+<br>
 
-# 📎 [ 메인 앱(FooPa) 보러가기](https://github.com/DDH-975/FooPa_local)
+## 📎 [ 메인 앱(FooPa) 보러가기](https://github.com/DDH-975/FooPa_local)
 
